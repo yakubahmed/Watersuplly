@@ -1,9 +1,9 @@
-<div class="navbar navbar-expand flex-column flex-md-row navbar-custom">
+<div class="navbar navbar-expand flex-column flex-md-row navbar-custom " >
                 <div class="container-fluid">
                     <!-- LOGO -->
                     <a href="index.php" class="navbar-brand mr-0 mr-md-2 logo">
                         <span class="logo-lg">
-                            <img src="assets/images/logo.png" alt="" height="24" />
+                            <img src="assets/images/somteso.png" alt="" height="24" />
                             <span class="d-inline h5 ml-1 text-logo">Water</span>
                         </span>
                         <span class="logo-sm">
