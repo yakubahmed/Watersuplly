@@ -1,3 +1,4 @@
+<?php  include_once('../includes/config.php');?>
 <div class="navbar navbar-expand flex-column flex-md-row navbar-custom " >
                 <div class="container-fluid">
                     <!-- LOGO -->

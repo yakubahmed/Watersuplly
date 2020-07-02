@@ -1,7 +1,7 @@
 <div class="left-side-menu">
                 <div class="media user-profile mt-2 mb-2">
-                    <img src="assets/images/Yakub.jpg" class="avatar-sm rounded-circle mr-2" alt="Shreyu" />
-                    <img src="assets/images/Yakub.jpg" class="avatar-xs rounded-circle mr-2" alt="Shreyu" />
+                    <img src="../images/Yakub.jpg" class="avatar-sm rounded-circle mr-2" alt="Shreyu" />
+                    <img src="../images/Yakub.jpg" class="avatar-xs rounded-circle mr-2" alt="Shreyu" />
 
                     <div class="media-body">
                         <h6 class="pro-user-name mt-0 mb-0">Yakub Ahmed</h6>
@@ -55,116 +55,42 @@
                                     <span> Dashboard </span>
                                 </a>
                             </li>
+                            <?php
+		                        $user=$_SESSION['member_id'];
+
+		                        $sql="select m.mid, m.mname, menuicon from submenu s inner join menu m on m.mid=s.mid inner join privilege p on  s.subid=p.subid
+                                where p.groupID in (select groupID from users where User_id='$user') group by m.mname order by s.subid";
+                                $query=mysqli_query($con, $sql);
+                                while($record=mysqli_fetch_array($query)){
+                                    $id=$record[0];
+                                
+                                
+                                
+                                ?>
                             <li class="menu-title">General</li>
            
 
                             <li>
+                                
                                 <a href="javascript: void(0);">
                                     <i data-feather="user"></i>
                                     <span> Customer </span>
+                                  
                                     <span class="menu-arrow"></span>
                                 </a>
 
                                 <ul class="nav-second-level" aria-expanded="false">
                                     <li>
-                                        <a href="email-inbox.html">Add new</a>
+                                        <a href="../customer/add">Add new</a>
                                     </li>
                                     <li>
-                                        <a href="email-read.html">Manage</a>
+                                        <a href="../customer/manage">Manage</a>
                                     </li>
                                   
                                 </ul>
                             </li>
 
-                            <li>
-                                <a href="javascript: void(0);">
-                                    <i data-feather="home"></i>
-                                    <span> Place </span>
-                                    <span class="menu-arrow"></span>
-                                </a>
 
-                                <ul class="nav-second-level" aria-expanded="false">
-                                    <li>
-                                        <a href="email-inbox.html">City</a>
-                                    </li>
-                                    <li>
-                                        <a href="email-read.html">Distruct</a>
-                                    </li>
-                                    <li>
-                                        <a href="email-read.html">Zone</a>
-                                    </li>
-                                  
-                                </ul>
-                            </li>
-                           
-                            <li class="menu-title">Recieption & Charge</li>
-                            <li>
-                                <a href="javascript: void(0);">
-                                    <i data-feather="file-plus"></i>
-                                    <span> Charge </span>
-                                    <span class="menu-arrow"></span>
-                                </a>
-                                <ul class="nav-second-level" aria-expanded="false">
-                                    <li>
-                                        <a href="pages-starter.html">Add new</a>
-                                    </li>
-                                    <li>
-                                        <a href="pages-profile.html">Manage</a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li>
-                                <a href="javascript: void(0);">
-                                    <i data-feather="file-text"></i>
-                                    <span> Recieption </span>
-                                    <span class="menu-arrow"></span>
-                                </a>
-                                <ul class="nav-second-level" aria-expanded="false">
-                                    <li>
-                                        <a href="pages-starter.html">Add new</a>
-                                    </li>
-                                    <li>
-                                        <a href="pages-profile.html">Manage</a>
-                                    </li>
-                        
-                                </ul>
-                            </li>
-                            
-                            <li class="menu-title">Setting</li>
-                            <li>
-                                <a href="javascript: void(0);">
-                                    <i data-feather="menu"></i>
-                                    <span> Menus </span>
-                                    <span class="menu-arrow"></span>
-                                </a>
-                                <ul class="nav-second-level" aria-expanded="false">
-                                    <li>
-                                        <a href="pages-starter.html">Menu</a>
-                                    </li>
-                                    <li>
-                                        <a href="pages-profile.html">Sub menu</a>
-                                    </li>
-                        
-                                </ul>
-                            </li>
-
-                            <li>
-                                <a href="javascript: void(0);">
-                                    <i data-feather="users"></i>
-                                    <span> Group & Previlage </span>
-                                    <span class="menu-arrow"></span>
-                                </a>
-                                <ul class="nav-second-level" aria-expanded="false">
-                                    <li>
-                                        <a href="pages-starter.html">Groups</a>
-                                    </li>
-                                    <li>
-                                        <a href="pages-profile.html">Previlage</a>
-                                    </li>
-                        
-                                </ul>
-                            </li>
 
 
                         </ul>
