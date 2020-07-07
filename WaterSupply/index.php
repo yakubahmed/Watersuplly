@@ -1,4 +1,6 @@
-<?php session_start(); ob_start(); include('includes/config.php');?>
+<?php session_start(); ob_start(); include('includes/config.php');
+if(isset($_SESSION['user_id'])){ header('location: dashboard/') ;}
+?>
 <!DOCTYPE html>
 <html lang="en">   
 <head>

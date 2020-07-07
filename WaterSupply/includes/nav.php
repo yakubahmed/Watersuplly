@@ -1,4 +1,6 @@
-<?php  include_once('../includes/config.php');?>
+<?php session_start();  include_once('../includes/config.php');?>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
 <div class="navbar navbar-expand flex-column flex-md-row navbar-custom " >
                 <div class="container-fluid">
                     <!-- LOGO -->

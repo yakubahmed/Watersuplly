@@ -4,7 +4,7 @@
                     <img src="../images/Yakub.jpg" class="avatar-xs rounded-circle mr-2" alt="Shreyu" />
 
                     <div class="media-body">
-                        <h6 class="pro-user-name mt-0 mb-0">Yakub Ahmed</h6>
+                        <h6 class="pro-user-name mt-0 mb-0"><?php echo $_SESSION['fname']; ?></h6>
                         <span class="pro-user-desc">Administrator</span>
                     </div>
                     <div class="dropdown align-self-center profile-dropdown-menu">
@@ -18,24 +18,10 @@
                                 <span>My Account</span>
                             </a>
 
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i data-feather="settings" class="icon-dual icon-xs mr-2"></i>
-                                <span>Settings</span>
-                            </a>
-
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i data-feather="help-circle" class="icon-dual icon-xs mr-2"></i>
-                                <span>Support</span>
-                            </a>
-
-                            <a href="pages-lock-screen.html" class="dropdown-item notify-item">
-                                <i data-feather="lock" class="icon-dual icon-xs mr-2"></i>
-                                <span>Lock Screen</span>
-                            </a>
 
                             <div class="dropdown-divider"></div>
 
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+                            <a href="../logout" class="dropdown-item notify-item">
                                 <i data-feather="log-out" class="icon-dual icon-xs mr-2"></i>
                                 <span>Logout</span>
                             </a>
@@ -55,42 +41,53 @@
                                     <span> Dashboard </span>
                                 </a>
                             </li>
-                            <?php
-		                        $user=$_SESSION['member_id'];
 
-		                        $sql="select m.mid, m.mname, menuicon from submenu s inner join menu m on m.mid=s.mid inner join privilege p on  s.subid=p.subid
-                                where p.groupID in (select groupID from users where User_id='$user') group by m.mname order by s.subid";
+                            <?php
+		                        $user=$_SESSION['user_id'];
+
+                                $sql="SELECT m.menu_id , m.menu_name, m.menu_icon from tbl_sub_menu s  inner join tbl_menu m  on m.menu_id=s.menu_id ";
+                                $sql .= "INNER JOIN tbl_previlage p ON  s.sub_menu_id = p.sub_menu_id ";
+                                $sql .= "WHERE p.group_id in (SELECT group_id FROM tbl_user WHERE user_id='$user') GROUP BY m.menu_name ORDER by s.sub_menu_id";
                                 $query=mysqli_query($con, $sql);
                                 while($record=mysqli_fetch_array($query)){
                                     $id=$record[0];
-                                
+                                    $mname = $record[1];
                                 
                                 
                                 ?>
-                            <li class="menu-title">General</li>
            
 
                             <li>
                                 
                                 <a href="javascript: void(0);">
-                                    <i data-feather="user"></i>
-                                    <span> Customer </span>
+                                    <i data-feather="<?php echo $record[2]; ?>"></i>
+                                    <span> <?php echo $record[1]; ?> </span>
                                   
                                     <span class="menu-arrow"></span>
                                 </a>
 
                                 <ul class="nav-second-level" aria-expanded="false">
-                                    <li>
-                                        <a href="../customer/add">Add new</a>
-                                    </li>
-                                    <li>
-                                        <a href="../customer/manage">Manage</a>
-                                    </li>
+                                    <?php
+                                        $s="SELECT s.sub_menu_id, s.sub_menu_name, s.url from tbl_sub_menu s inner join tbl_menu m on m.menu_id=s.menu_id
+                                        inner join tbl_previlage p on  s.sub_menu_id=p.sub_menu_id
+                                        WHERE p.group_id in (select group_id from tbl_user where user_id='$user') and s.menu_id='$id'
+                                        group by s.sub_menu_name order by s.sub_menu_id";
+                                        $qu=mysqli_query($con, $s);
+                                        while($re=mysqli_fetch_array($qu)){
+                                            
+                                        
+                                    ?>
+                                    <li><a href="<?php echo $re[2]; ?>"><?php echo $re[1]; ?></a></li>
+			  
+			
+			                    <?php }?>
+
+
                                   
                                 </ul>
                             </li>
 
-
+                          <?php }?>     
 
 
                         </ul>
@@ -102,3 +99,4 @@
                 <!-- Sidebar -left -->
 
             </div>
+

@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,38 +44,57 @@
 </head>
 
 <?php include_once('../includes/nav.php'); include_once('../includes/sidebar.php'); ?>
+    <body>
+        <!-- Begin page -->
+        <div id="wrapper">
 
-<div class="content-page">
+ 
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+            <div class="content-page">
                 <div class="content">
                     <div class="container-fluid">
                         <div class="row page-title align-items-center">
                             <div class="col-sm-4 col-xl-6">
                                 <h4 class="mb-1 mt-0">Dashboard</h4>
                             </div>
+                   
                         </div>
 
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="card">
-                                    <div class="card-header bg-info text-light">Add new city</div>
+                                    <div class="card-header bg-info text-light">Add new zone</div>
                                     <div class="card-body">
                                         <form method="post">
                                             <div class="row">
-                                                <div class="form-group col-md-12">
-                                                    <label for="">City name</label>
-                                                    <input type="text" name="cname" id="" class="form-control" placeholder="e.g Mogadishu" required value="<?php  get_city_name();?>">
+                                                <div class="form-group col-md-6">
+                                                    <label for="">Distruct</label>
+                                                    <select name="distruct" id="" class='form-control' required>
+                                                        <?php get_disturct();?>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group col-md-6">
+                                                    <label for="">Zone name</label>
+                                                    <input type="text" name="zname" id="" class="form-control" placeholder="e.g guuleed" required value="<?php  get_zone(); ?>">
                                                 </div>
 
                                                 <div class="form-group col-md-12">
-                                                    <?php if(isset($_GET['cname'])){ ?>
-                                                        <input type="submit" value="Update" class='btn btn-info' name='updCity'>
-                                                    <?php }else{?>
-                                                        <input type="submit" value="Submit" class='btn btn-info' name='btnCity'>
+                                                    <?php if(isset($_GET['update'])){ ?>
+                                                        <input type="submit" value="Update" class='btn btn-primary' name='btnUpdZone'>
+                                                    <?php }else{ ?>
+                                                        <input type="submit" value="Submit" class='btn btn-info' name='btnAddZone'>
                                                     <?php }?>
                                                 </div>
 
                                             </div>
                                         </form>
+
+                                     
                                     </div>
                                     
                                 </div>
@@ -81,20 +102,21 @@
 
                             <div class="col-md-6">
                                 <div class="card">
-                                    <div class="card-header bg-info text-light">Manage cities</div>
+                                    <div class="card-header bg-info text-light">Manage Distructs</div>
                                     <div class="card-body">
                                         <table id="basic-datatable" class="table table-striped dt-responsive nowrap">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>City name</th>
+                                                    <th>Distruct</th>
+                                                    <th>Zone</th>
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
-                                                <?php  display_cities();?>
+                                        
                                         
                                             <tbody>
-
+                                                <?php zones(); ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -111,9 +133,7 @@
                        
                     </div>
                 </div> <!-- content -->
-
-
-<?php include('../includes/footer.php'); ?>
+                <?php include('../includes/footer.php'); ?>
 <!-- Right bar overlay-->
 <div class="rightbar-overlay"></div>
 
@@ -171,9 +191,47 @@
 </script>
 
 <?php
-if(isset($_POST['btnCity'])){
+
+
+function get_disturct(){
+    global $con;
+    if(isset($_GET['update'])){
+        $dnam = $_GET['dis'];
+        $stmt = "SELECT * FROM tbl_distruct WHERE  distruct_name = '$dnam'";
+        $result = mysqli_query($con, $stmt);
+        while($row = mysqli_fetch_assoc($result)){
+            $id = $row['distruct_id'];
+            $name = $row['distruct_name'];
+    
+            echo " <option value='$id'>$name</option> ";
+        }
+
+        $stmt = "SELECT * FROM tbl_distruct WHERE  distruct_name != '$dnam'";
+        $result = mysqli_query($con, $stmt);
+        while($row = mysqli_fetch_assoc($result)){
+            $id = $row['distruct_id'];
+            $name = $row['distruct_name'];
+    
+            echo " <option value='$id'>$name</option> ";
+        }
+    }else{
+        echo " <option value=''>Select distruct</option> ";
+
+        $stmt = "SELECT * FROM tbl_distruct";
+        $result = mysqli_query($con, $stmt);
+        while($row = mysqli_fetch_assoc($result)){
+            $id = $row['distruct_id'];
+            $name = $row['distruct_name'];
+    
+            echo " <option value='$id'>$name</option> ";
+        }
+    }
+
+}
+
+if(isset($_POST['btnAddZone'])){
     extract($_POST);
-    $stmt = "SELECT * FROM tbl_city WHERE city_name = '$cname' ";
+    $stmt = "SELECT * FROM tbl_zone WHERE zone_name = '$zname' ";
     $result = mysqli_query($con, $stmt);
     if(mysqli_num_rows($result) > 0){
         echo "
@@ -181,7 +239,7 @@ if(isset($_POST['btnCity'])){
         Swal.fire({
         position: 'center',
         icon: 'error',
-        title: 'This city is already registered ',
+        title: 'This zone is already registered ',
         showConfirmButton: false,
         timer: 1500
         })
@@ -189,7 +247,7 @@ if(isset($_POST['btnCity'])){
         
         "; 
     }else{
-        $stmt = "INSERT INTO tbl_city (city_name) VALUES ('$cname')";
+        $stmt = "INSERT INTO tbl_zone (distruct_id, zone_name) VALUES ('$distruct', '$zname')";
         $result = mysqli_query($con, $stmt);
         if($result){
             echo "
@@ -197,11 +255,11 @@ if(isset($_POST['btnCity'])){
             Swal.fire({
             position: 'center',
             icon: 'success',
-            title: 'City created successfully ',
+            title: 'Zone created successfully ',
             showConfirmButton: false,
             timer: 1500
             }).then((result) => {
-                window.location.href = 'city'
+                window.location.href = 'zone'
               })
             </script>
             
@@ -212,30 +270,24 @@ if(isset($_POST['btnCity'])){
 }
 
 
-function get_city_name(){
-    if(isset($_POST['btnCity'])){
-        echo $_POST['cname'];
-    }elseif(isset($_GET['cname'])){
-        echo $_GET['cname'];
-    }
-}
-
-function display_cities(){
+function zones(){
     global $con;
     $i = 0;
-    $stmt = "SELECT * FROM tbl_city";
+    $stmt = "SELECT * FROM view_zone ";
     $result = mysqli_query($con, $stmt);
     while($row = mysqli_fetch_assoc($result)){
         $i++;
-        $id = $row['city_id'];
-        $cname = $row['city_name'];
+        $id = $row['zone_id'];
+        $zname = $row['zone_name'];
+        $dname = $row['distruct_name'];
         echo "
         <tr>
             <td>$i</td>
-            <td>$cname</td>
+            <td>$zname</td>
+            <td>$dname</td>
             <td> 
-                <a href='city?update=$id&cname=$cname' class='btn btn-info btn-xs' data-toggle='tooltip' title='Edit'> <span data-feather='edit'></span> </a>
-                <a href='city?delete=$id' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'> <span data-feather='trash'></span> </a>
+                <a href='zone?update=$id&dis=$dname&zone=$zname' class='btn btn-info btn-xs' data-toggle='tooltip' title='Edit'> <span data-feather='edit'></span> </a>
+                <a href='zone?delete=$id' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'> <span data-feather='trash'></span> </a>
             </td>
         
         </tr>
@@ -246,19 +298,19 @@ function display_cities(){
 
 if(isset($_GET['delete'])){
     $id = $_GET['delete'];
-    $stmt = "DELETE FROM tbl_city WHERE city_id = $id";
-    $result = mysqli_query($con, $stmt);
+    $stmt = "DELETE FROM tbl_zone WHERE zone_id = $id";
+    $result=mysqli_query($con, $stmt);
     if($result){
         echo "
         <script>
         Swal.fire({
         position: 'center',
         icon: 'success',
-        title: 'Deleted successfully',
+        title: 'Zone deleted successfully ',
         showConfirmButton: false,
         timer: 1500
         }).then((result) => {
-            window.location.href = 'city'
+            window.location.href = 'zone'
           })
         </script>
         
@@ -267,10 +319,18 @@ if(isset($_GET['delete'])){
 }
 
 
-if(isset($_POST['updCity'])){
-    extract($_POST);
+function get_zone(){
+    if(isset($_POST['btnAddZone'])){
+        echo $_POST['zname'];
+    }elseif(isset($_GET['update'])){
+        echo $_GET['zone'];
+    }
+}
+
+if(isset($_POST['btnUpdZone'])){
     $id = $_GET['update'];
-    $stmt = "UPDATE   tbl_city SET city_name='$cname' WHERE city_id =$id";
+    extract($_POST);
+    $stmt = "UPDATE  tbl_zone SET distruct_id = '$distruct', zone_name = '$zname' WHERE zone_id = $id ";
     $result = mysqli_query($con, $stmt);
     if($result){
         echo "
@@ -278,19 +338,17 @@ if(isset($_POST['updCity'])){
         Swal.fire({
         position: 'center',
         icon: 'success',
-        title: 'City updated successfully ',
+        title: 'Zone updated successfully ',
         showConfirmButton: false,
         timer: 1500
         }).then((result) => {
-            window.location.href = 'city'
+            window.location.href = 'zone'
           })
         </script>
         
         "; 
     }
-    
 }
-
-
 
 ?>
+
